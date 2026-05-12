@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marine Guard AI — Protecting Oceans with Artificial Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #020b18;
+      --deep: #040f1e;
+      --cyan: #00d4ff;
+      --aqua: #00ffcc;
+      --blue: #0066ff;
+      --glow: #00b4d8;
+      --card-bg: rgba(0, 30, 60, 0.45);
+      --border: rgba(0, 212, 255, 0.2);
+      --text: #e0f4ff;
+      --muted: #6a9ab0;
+      --danger: #ff4757;
+      --warn: #ffa502;
+      --safe: #2ed573;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── CANVAS BG ─────────────────────────────── */
+    #ocean-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ─── NAV ───────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(2,11,24,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-logo .logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 20px rgba(0,212,255,0.4);
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-cta {
+      display: flex; gap: 1rem;
+    }
+    .btn {
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s;
+      letter-spacing: 0.05em;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--cyan);
+    }
+    .btn-ghost:hover {
+      background: rgba(0,212,255,0.1);
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border: none; color: #fff;
+      box-shadow: 0 4px 20px rgba(0,212,255,0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,212,255,0.6);
+    }
+
+    /* ─── HERO ──────────────────────────────────── */
+    #hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      border: 1px solid rgba(0,212,255,0.3);
+      background: rgba(0,212,255,0.08);
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 2rem;
+      animation: fadeInDown 0.8s ease both;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--aqua);
+      box-shadow: 0 0 8px var(--aqua);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+    h1.hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 1s ease 0.2s both;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--aqua) 50%, var(--blue) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      max-width: 700px;
+      font-size: 1.15rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 3rem;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+    .hero-buttons {
+      display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 4rem;
+      animation: fadeInUp 1s ease 0.6s both;
+    }
+    .btn-lg { padding: 0.9rem 2rem; font-size: 1rem; border-radius: 12px; }
+
+    .hero-stats {
+      display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeInUp 1s ease 0.8s both;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Floating particles overlay */
+    .particles-container { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--cyan), transparent);
+      opacity: 0.15;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.15; }
+      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+    }
+
+    /* ─── SECTION BASE ──────────────────────────── */
+    section { position: relative; z-index: 1; padding: 6rem 2rem; }
+    .container { max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.15em; color: var(--cyan);
+      margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: block;
+      width: 30px; height: 2px;
+      background: var(--cyan);
+    }
+    h2.section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 800; margin-bottom: 1rem;
+    }
+    .section-desc { color: var(--muted); max-width: 600px; line-height: 1.7; margin-bottom: 3.5rem; font-size: 1rem; }
+
+    /* ─── GLASS CARD ────────────────────────────── */
+    .glass {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .glow-hover {
+      transition: all 0.3s;
+    }
+    .glow-hover:hover {
+      border-color: rgba(0,212,255,0.5);
+      box-shadow: 0 0 30px rgba(0,212,255,0.15), 0 8px 40px rgba(0,0,0,0.4);
+      transform: translateY(-4px);
+    }
+
+    /* ─── FEATURES ──────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      padding: 2rem;
+    }
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 1.2rem;
+    }
+    .feature-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem; font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ─── DASHBOARD PREVIEW ─────────────────────── */
+    .dashboard-preview {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(0,212,255,0.1);
+    }
+    .db-topbar {
+      background: rgba(0,20,40,0.95);
+      padding: 0.8rem 1.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .db-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .db-title { font-family: 'Orbitron', monospace; font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+    .db-body {
+      background: rgba(2,11,24,0.98);
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    .db-stat-card {
+      background: rgba(0,30,60,0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+    .db-stat-card .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .db-stat-card .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.6rem; font-weight: 700;
+    }
+    .db-stat-card .change { font-size: 0.72rem; margin-top: 0.3rem; }
+    .up { color: var(--safe); }
+    .down { color: var(--danger); }
+    .db-map-area {
+      grid-column: span 4;
+      background: rgba(0,20,40,0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .db-map-text { font-family: 'Orbitron', monospace; font-size: 0.85rem; color: var(--muted); z-index: 2; }
+    .map-glow {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.3), transparent);
+      animation: mapGlow 4s infinite alternate;
+    }
+    @keyframes mapGlow {
+      0% { transform: scale(0.9); opacity: 0.4; }
+      100% { transform: scale(1.3); opacity: 0.8; }
+    }
+    .hotspot {
+      position: absolute; border-radius: 50%;
+      border: 2px solid;
+      animation: hotspotPulse 2s infinite;
+    }
+    @keyframes hotspotPulse {
+      0%,100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.5); opacity: 0.4; }
+    }
+    .db-charts-row {
+      grid-column: span 4;
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    .db-chart-card {
+      background: rgba(0,30,60,0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem;
+      height: 140px; overflow: hidden;
+    }
+    .chart-title { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+    .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 90px; }
+    .bar {
+      flex: 1; border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--blue), var(--cyan));
+      opacity: 0.8;
+      animation: barGrow 1.5s ease both;
+    }
+    @keyframes barGrow { from { height: 0 !important; } }
+    .chart-line { position: relative; height: 90px; }
+    .chart-line svg { width: 100%; height: 100%; }
+
+    /* ─── AI WORKFLOW ───────────────────────────── */
+    .workflow-steps {
+      display: flex; align-items: center;
+      gap: 0; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .workflow-step {
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      padding: 1.5rem;
+      flex: 1; min-width: 140px;
+    }
+    .step-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      background: rgba(0,212,255,0.1);
+      margin-bottom: 1rem;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+      animation: stepPulse 3s infinite;
+    }
+    @keyframes stepPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(0,212,255,0.3); }
+      50% { box-shadow: 0 0 40px rgba(0,212,255,0.6); }
+    }
+    .step-num {
+      position: absolute; top: -6px; right: -6px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--cyan); color: #000;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-title { font-family: 'Orbitron', monospace; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .step-desc { font-size: 0.78rem; color: var(--muted); }
+    .workflow-arrow {
+      font-size: 1.5rem; color: var(--cyan); opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    /* ─── STATS SECTION ─────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .stat-card {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--aqua));
+    }
+    .stat-card .big-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.8rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-card .big-label { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; }
+    .stat-card .stat-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+    /* ─── DETECTION SECTION ─────────────────────── */
+    .detection-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;
+    }
+    .upload-zone {
+      border: 2px dashed rgba(0,212,255,0.3);
+      border-radius: 16px; padding: 3rem 2rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .upload-zone:hover {
+      border-color: var(--cyan);
+      background: rgba(0,212,255,0.05);
+    }
+    .upload-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .upload-text { font-size: 0.95rem; color: var(--muted); }
+    .detection-results { display: flex; flex-direction: column; gap: 1rem; }
+    .det-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.5rem;
+    }
+    .det-icon { font-size: 1.5rem; }
+    .det-info { flex: 1; }
+    .det-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .det-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 50px; height: 6px; }
+    .det-bar {
+      height: 100%; border-radius: 50px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      animation: barFill 2s ease both;
+    }
+    @keyframes barFill { from { width: 0 !important; } }
+    .det-pct { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: var(--cyan); min-width: 40px; text-align: right; }
+
+    /* ─── REPORTING ─────────────────────────────── */
+    .report-form { display: grid; gap: 1rem; }
+    .form-group label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 0.8rem 1rem;
+      background: rgba(0,30,60,0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-family: 'Exo 2', sans-serif; font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+    }
+    .form-textarea { resize: vertical; min-height: 100px; }
+    .tag-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .tag-pill {
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+      border: 1px solid var(--border);
+      background: rgba(0,30,60,0.6);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tag-pill:hover, .tag-pill.active { border-color: var(--cyan); background: rgba(0,212,255,0.15); color: var(--cyan); }
+
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+    /* ─── RISK ZONES ────────────────────────────── */
+    .risk-list { display: flex; flex-direction: column; gap: 0.8rem; }
+    .risk-item {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem;
+    }
+    .risk-dot {
+      width: 12px; height: 12px; border-radius: 50; flex-shrink: 0;
+    }
+    .risk-info { flex: 1; }
+    .risk-name { font-weight: 600; font-size: 0.9rem; }
+    .risk-loc { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .risk-badge {
+      padding: 0.25rem 0.7rem;
+      border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-critical { background: rgba(255,71,87,0.2); color: var(--danger); border: 1px solid rgba(255,71,87,0.4); }
+    .badge-high { background: rgba(255,165,2,0.2); color: var(--warn); border: 1px solid rgba(255,165,2,0.4); }
+    .badge-medium { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
+
+    /* ─── FORECAST ──────────────────────────────── */
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .forecast-card {
+      padding: 1.8rem;
+      position: relative; overflow: hidden;
+      cursor: default;
+    }
+    .forecast-card::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(0,212,255,0.05) 60deg, transparent 120deg);
+      animation: rotateGlow 6s linear infinite;
+    }
+    @keyframes rotateGlow { to { transform: rotate(360deg); } }
+    .fc-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .fc-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; }
+    .fc-val {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem; font-weight: 800;
+    }
+    .fc-trend { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+    .fc-bar-wrap { margin-top: 1rem; background: rgba(255,255,255,0.08); height: 4px; border-radius: 50px; }
+    .fc-bar { height: 100%; border-radius: 50px; }
+
+    /* ─── FOOTER ────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      background: rgba(0,5,15,0.98);
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem 2rem;
+    }
+    .footer-grid {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; margin-top: 1rem; }
+    .footer-col h4 {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--cyan); margin-bottom: 1.2rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-col ul a { color: var(--muted); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1280px; margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p { color: var(--muted); font-size: 0.82rem; }
+    .social-links { display: flex; gap: 1rem; }
+    .social-link {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .social-link:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 10px rgba(0,212,255,0.3); }
+
+    /* ─── DASHBOARD PAGE ────────────────────────── */
+    #dashboard-page {
+      display: none;
+      position: fixed; inset: 0; z-index: 2000;
+      background: var(--navy);
+    }
+    #dashboard-page.active { display: flex; }
+    .db-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: rgba(0,10,25,0.98);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 0 1.5rem 1.5rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .sidebar-nav { flex: 1; padding: 0 0.75rem; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.75rem 0.75rem;
+      border-radius: 10px; cursor: pointer;
+      color: var(--muted); font-size: 0.88rem; font-weight: 500;
+      transition: all 0.2s; margin-bottom: 0.2rem;
+    }
+    .sidebar-item:hover { background: rgba(0,212,255,0.08); color: var(--text); }
+    .sidebar-item.active { background: rgba(0,212,255,0.12); color: var(--cyan); }
+    .sidebar-item .s-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+    .sidebar-section {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.12em; color: rgba(106,154,176,0.5);
+      margin: 0.8rem 0 0.3rem;
+    }
+    .db-main {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+    .db-topnav {
+      background: rgba(0,10,25,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-shrink: 0;
+    }
+    .db-search {
+      flex: 1; max-width: 360px;
+      display: flex; align-items: center; gap: 0.7rem;
+      background: rgba(0,30,60,0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.6rem 1rem;
+    }
+    .db-search input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-family: 'Exo 2', sans-serif;
+      font-size: 0.88rem; flex: 1;
+    }
+    .db-search input::placeholder { color: var(--muted); }
+    .ocean-status {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: rgba(46,213,115,0.1);
+      border: 1px solid rgba(46,213,115,0.3);
+      font-size: 0.8rem; color: var(--safe); font-weight: 600;
+    }
+    .db-content { flex: 1; padding: 2rem; overflow-y: auto; }
+    .db-section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .kpi-card {
+      padding: 1.2rem;
+      position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+    .kpi-val {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem;
+    }
+    .kpi-change { font-size: 0.72rem; }
+    .kpi-icon { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; opacity: 0.3; }
+    .map-container {
+      background: rgba(0,20,40,0.7);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      height: 380px;
+      position: relative; overflow: hidden;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .map-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .map-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 800px 400px at 50% 50%, rgba(0,30,60,0.8), transparent),
+        linear-gradient(180deg, rgba(0,20,50,0.9), rgba(0,5,20,0.95));
+    }
+    .map-grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+      background-size: 60px 40px;
+    }
+    .map-label { font-family: 'Orbitron', monospace; font-size: 0.9rem; color: var(--muted); z-index: 2; }
+    .map-markers { position: absolute; inset: 0; }
+    .map-marker {
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+    .marker-ring {
+      border-radius: 50%;
+      border: 2px solid;
+      display: flex; align-items: center; justify-content: center;
+      animation: markerPulse 2s infinite;
+    }
+    @keyframes markerPulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.4; }
+    }
+    .marker-dot { border-radius: 50%; }
+    .map-legend {
+      position: absolute; bottom: 1.2rem; right: 1.2rem;
+      background: rgba(0,15,30,0.9); backdrop-filter: blur(10px);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.8rem 1rem; z-index: 3;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.75rem; color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .legend-item:last-child { margin-bottom: 0; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .chart-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .mini-chart {
+      padding: 1.5rem;
+    }
+    .mc-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 1rem; }
+    .mc-body { height: 120px; display: flex; align-items: flex-end; gap: 3px; }
+    .mc-bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      min-height: 4px; transition: height 0.5s ease;
+    }
+
+    /* AI Detection panel */
+    .ai-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .ai-upload-area {
+      border: 2px dashed rgba(0,212,255,0.25);
+      border-radius: 14px; padding: 2.5rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .ai-upload-area:hover { border-color: var(--cyan); background: rgba(0,212,255,0.03); }
+    .ai-results { display: flex; flex-direction: column; gap: 0.8rem; }
+    .ai-result-item {
+      padding: 1rem 1.2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .ai-type-icon { font-size: 1.3rem; }
+    .ai-type-info { flex: 1; }
+    .ai-type-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .ai-type-bar { background: rgba(255,255,255,0.08); height: 5px; border-radius: 50px; }
+    .ai-type-fill { height: 100%; border-radius: 50px; }
+    .ai-pct { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; min-width: 38px; text-align: right; }
+    .confidence-meter {
+      margin-top: 1.5rem; padding: 1.2rem 1.5rem;
+      text-align: center;
+    }
+    .conf-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+    .conf-circle {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      border: 4px solid rgba(0,212,255,0.2);
+      border-top-color: var(--cyan);
+      border-right-color: var(--aqua);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      animation: spin 8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .conf-val { font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 700; color: var(--cyan); }
+
+    /* Notifications */
+    .notif-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.2rem;
+    }
+    .notif-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .notif-content .ntitle { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .notif-content .ndesc { font-size: 0.8rem; color: var(--muted); }
+    .notif-content .ntime { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+    .notif-badge { margin-left: auto; flex-shrink: 0; }
+
+    /* Auth page */
+    #auth-page {
+      display: none;
+      position: fixed; inset: 0; z-index: 1500;
+      background: var(--navy);
+      align-items: center; justify-content: center;
+    }
+    #auth-page.active { display: flex; }
+    .auth-box {
+      width: 440px; padding: 3rem;
+      text-align: center;
+    }
+    .auth-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem; font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .auth-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    .auth-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+    .auth-input-wrap { position: relative; }
+    .auth-input-icon {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; color: var(--muted);
+    }
+    .auth-input {
+      width: 100%; padding: 0.85rem 1rem 0.85rem 2.8rem;
+      background: rgba(0,30,60,0.7);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Exo 2', sans-serif;
+      font-size: 0.9rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .auth-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+    }
+    .auth-divider {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.8rem; color: var(--muted);
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
+    }
+    .role-select {
+      display: flex; gap: 1rem;
+    }
+    .role-btn {
+      flex: 1; padding: 0.7rem;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(0,30,60,0.5);
+      color: var(--muted); cursor: pointer;
+      text-align: center; font-size: 0.85rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .role-btn.selected { border-color: var(--cyan); background: rgba(0,212,255,0.1); color: var(--cyan); }
+    .auth-back { color: var(--muted); font-size: 0.85rem; cursor: pointer; transition: color 0.2s; }
+    .auth-back:hover { color: var(--cyan); }
+
+    /* Animations */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeInUp 0.6s ease both; }
+
+    /* Tab system */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--muted); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .forecast-grid { grid-template-columns: repeat(2, 1fr); }
+      .detection-grid, .report-grid, .ai-panel-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .db-sidebar { width: 200px; }
+      .chart-section { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .forecast-grid { grid-template-columns: 1fr; }
+      .db-sidebar { display: none; }
+      .db-topbar .db-stat-card { display: none; }
+      .chart-section { grid-template-columns: 1fr; }
+      .workflow-steps { flex-direction: column; }
+      .workflow-arrow { transform: rotate(90deg); }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.4); }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.2rem; border-radius: 8px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--safe);
+      box-shadow: 0 0 8px var(--safe);
+      animation: pulse 2s infinite;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="ocean-canvas"></canvas>
+
+<!-- ─── NAVIGATION ────────────────────────────── -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon">🌊</div>
+    Marine Guard AI
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#detection">AI Detection</a></li>
+    <li><a href="#forecast">Forecast</a></li>
+    <li><a href="#reporting">Report</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a class="btn btn-ghost" onclick="showAuth('login')">Sign In</a>
+    <a class="btn btn-primary" onclick="showDashboard()">Live Dashboard →</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────── -->
+<section id="hero">
+  <div class="particles-container" id="particles"></div>
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    AI-Powered Environmental Monitoring
+  </div>
+  <h1 class="hero-title">
+    <span class="gradient-text">Marine Guard</span><br>
+    Protecting Oceans With<br>Artificial Intelligence
+  </h1>
+  <p class="hero-sub">
+    Advanced real-time ocean pollution monitoring system powered by YOLOv8 and deep learning.
+    Empowering governments, researchers, and citizens to protect our marine ecosystems.
+  </p>
+  <div class="hero-buttons">
+    <button class="btn btn-primary btn-lg" onclick="showDashboard()">
+      🚀 Launch Dashboard
+    </button>
+    <button class="btn btn-ghost btn-lg" onclick="showAuth('signup')">
+      📡 Get Started Free
+    </button>
+    <a class="btn btn-ghost btn-lg" href="#reporting">
+      🗺️ Report Pollution
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num" data-count="2847">0</div>
+      <div class="stat-label">Active Reports</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="147">0</div>
+      <div class="stat-label">Regions Monitored</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="94">0</div>
+      <div class="stat-label">AI Accuracy %</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="62">0</div>
+      <div class="stat-label">Ocean Health Index</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider container" style="margin-bottom: 6rem;"></div>
+
+<!-- ─── FEATURES ──────────────────────────────── -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Core Capabilities</div>
+    <h2 class="section-title">AI-Powered <span class="gradient-text">Ocean Intelligence</span></h2>
+    <p class="section-desc">Our platform combines satellite imagery, citizen reports, and deep learning models to deliver real-time ocean protection at planetary scale.</p>
+
+    <div class="features-grid">
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(0,212,255,0.15)">🤖</div>
+        <h3>AI Pollution Detection</h3>
+        <p>YOLOv8-powered computer vision identifies plastic waste, oil spills, fishing nets, and chemical pollutants with 94% accuracy in real-time.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(0,255,204,0.15)">🌡️</div>
+        <h3>Ocean Health Monitoring</h3>
+        <p>Continuous tracking of pH levels, temperature anomalies, dissolved oxygen, and water clarity across 147 monitored regions globally.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(0,102,255,0.15)">🐠</div>
+        <h3>Biodiversity Risk Tracking</h3>
+        <p>Machine learning models predict species displacement and extinction risk from pollution events using historical ecosystem data.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(255,71,87,0.15)">🗺️</div>
+        <h3>Heatmap Analytics</h3>
+        <p>Interactive real-time pollution heatmaps showing critical zones, contamination spread patterns, and cleanup priority regions.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(255,165,2,0.15)">🔮</div>
+        <h3>Ocean Forecasting</h3>
+        <p>Time-series deep learning predicts pollution growth, coral reef degradation, and ecosystem damage up to 90 days in advance.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(46,213,115,0.15)">👥</div>
+        <h3>Citizen Reporting</h3>
+        <p>Crowdsourced pollution reporting with GPS tagging, image upload, and AI verification — turning every coastal citizen into a guardian.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(180,0,255,0.15)">🧹</div>
+        <h3>Cleanup Prioritization</h3>
+        <p>AI-driven allocation of cleanup resources based on pollution severity, biodiversity impact, and coastal population exposure scores.</p>
+      </div>
+      <div class="glass glow-hover feature-card">
+        <div class="feature-icon" style="background:rgba(0,212,255,0.15)">📊</div>
+        <h3>Marine Ecosystem Prediction</h3>
+        <p>TensorFlow-powered ecosystem health models forecast coral bleaching events, dead zones, and tipping points before they occur.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider container" style="margin: 2rem auto;"></div>
+
+<!-- ─── DASHBOARD PREVIEW ─────────────────────── -->
+<section id="preview" style="padding: 4rem 2rem 6rem;">
+  <div class="container">
+    <div class="section-label">Live Platform</div>
+    <h2 class="section-title">Intelligent <span class="gradient-text">Analytics Dashboard</span></h2>
+    <p class="section-desc">A command center for ocean health — built for researchers, agencies, and environmental teams.</p>
+
+    <div class="dashboard-preview">
+      <div class="db-topbar">
+        <div class="db-dot" style="background:#ff4757"></div>
+        <div class="db-dot" style="background:#ffa502"></div>
+        <div class="db-dot" style="background:#2ed573"></div>
+        <div class="db-title">Marine Guard AI — Ocean Intelligence Platform</div>
+      </div>
+      <div class="db-body">
+        <div class="db-stat-card">
+          <div class="label">Pollution Index</div>
+          <div class="value" style="color:#ff4757">72.4</div>
+          <div class="change down">▲ +3.2 this week</div>
+        </div>
+        <div class="db-stat-card">
+          <div class="label">Ocean Health</div>
+          <div class="value" style="color:#2ed573">62.8</div>
+          <div class="change up">▼ -1.1 (stable)</div>
+        </div>
+        <div class="db-stat-card">
+          <div class="label">Active Reports</div>
+          <div class="value" style="color:#00d4ff">2,847</div>
+          <div class="change up">▲ +124 today</div>
+        </div>
+        <div class="db-stat-card">
+          <div class="label">High Risk Zones</div>
+          <div class="value" style="color:#ffa502">18</div>
+          <div class="change down">▲ +2 new</div>
+        </div>
+
+        <div class="db-map-area">
+          <div class="map-bg"></div>
+          <div class="map-grid-lines"></div>
+          <div class="map-glow" style="width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+          <!-- Hotspots -->
+          <div class="hotspot" style="width:50px;height:50px;border-color:#ff4757;top:30%;left:20%;transform:translate(-50%,-50%)"></div>
+          <div class="hotspot" style="width:40px;height:40px;border-color:#ffa502;top:55%;left:65%;transform:translate(-50%,-50%);animation-delay:0.5s"></div>
+          <div class="hotspot" style="width:35px;height:35px;border-color:#ff4757;top:25%;left:75%;transform:translate(-50%,-50%);animation-delay:1s"></div>
+          <div class="hotspot" style="width:30px;height:30px;border-color:#2ed573;top:70%;left:35%;transform:translate(-50%,-50%);animation-delay:1.5s"></div>
+          <div class="hotspot" style="width:45px;height:45px;border-color:#ffa502;top:40%;left:50%;transform:translate(-50%,-50%);animation-delay:0.7s"></div>
+          <div class="db-map-text" style="position:absolute;top:1rem;left:1.5rem;background:rgba(0,10,25,0.8);padding:0.4rem 0.8rem;border-radius:6px;border:1px solid rgba(0,212,255,0.2)">🌍 Global Ocean Monitor — Live</div>
+        </div>
+
+        <div class="db-charts-row">
+          <div class="db-chart-card">
+            <div class="chart-title">Pollution Trend (7d)</div>
+            <div class="chart-bars" id="preview-bars">
+              <div class="bar" style="height:60%;background:linear-gradient(to top,#0066ff,#00d4ff)"></div>
+              <div class="bar" style="height:75%;animation-delay:0.1s;background:linear-gradient(to top,#0066ff,#00d4ff)"></div>
+              <div class="bar" style="height:55%;animation-delay:0.2s;background:linear-gradient(to top,#0066ff,#00d4ff)"></div>
+              <div class="bar" style="height:80%;animation-delay:0.3s;background:linear-gradient(to top,#ffa502,#ffcc02)"></div>
+              <div class="bar" style="height:70%;animation-delay:0.4s;background:linear-gradient(to top,#ffa502,#ffcc02)"></div>
+              <div class="bar" style="height:85%;animation-delay:0.5s;background:linear-gradient(to top,#ff4757,#ff6b81)"></div>
+              <div class="bar" style="height:90%;animation-delay:0.6s;background:linear-gradient(to top,#ff4757,#ff6b81)"></div>
+            </div>
+          </div>
+          <div class="db-chart-card">
+            <div class="chart-title">Ocean Health Score</div>
+            <div class="chart-line">
+              <svg viewBox="0 0 200 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,60 L30,55 L60,70 L90,50 L120,45 L150,52 L180,40 L200,38" stroke="#00d4ff" stroke-width="2" fill="none"/>
+                <path d="M0,60 L30,55 L60,70 L90,50 L120,45 L150,52 L180,40 L200,38 L200,100 L0,100 Z" fill="url(#lineGrad)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="db-chart-card">
+            <div class="chart-title">Biodiversity Risk</div>
+            <div class="chart-bars">
+              <div class="bar" style="height:40%;background:linear-gradient(to top,#2ed573,#a3ff6a)"></div>
+              <div class="bar" style="height:55%;animation-delay:0.1s;background:linear-gradient(to top,#2ed573,#a3ff6a)"></div>
+              <div class="bar" style="height:45%;animation-delay:0.2s;background:linear-gradient(to top,#ffa502,#ffcc02)"></div>
+              <div class="bar" style="height:65%;animation-delay:0.3s;background:linear-gradient(to top,#ffa502,#ffcc02)"></div>
+              <div class="bar" style="height:75%;animation-delay:0.4s;background:linear-gradient(to top,#ff4757,#ff6b81)"></div>
+              <div class="bar" style="height:60%;animation-delay:0.5s;background:linear-gradient(to top,#ff4757,#ff6b81)"></div>
+              <div class="bar" style="height:80%;animation-delay:0.6s;background:linear-gradient(to top,#ff4757,#ff6b81)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AI WORKFLOW ───────────────────────────── -->
+<section id="workflow" style="background: rgba(0,10,25,0.5);">
+  <div class="container">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">AI <span class="gradient-text">Detection Pipeline</span></h2>
+    <p class="section-desc">From citizen upload to cleanup recommendation — our AI processes every report in under 3 seconds.</p>
+
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-icon">📸<span class="step-num">1</span></div>
+        <div class="step-title">Citizen Upload</div>
+        <div class="step-desc">Image or GPS report submitted via app</div>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">🤖<span class="step-num">2</span></div>
+        <div class="step-title">AI Detection</div>
+        <div class="step-desc">YOLOv8 identifies pollution type & extent</div>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">⚠️<span class="step-num">3</span></div>
+        <div class="step-title">Risk Analysis</div>
+        <div class="step-desc">Severity scoring & impact assessment</div>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">🔮<span class="step-num">4</span></div>
+        <div class="step-title">Forecasting</div>
+        <div class="step-desc">90-day pollution spread prediction</div>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">🧹<span class="step-num">5</span></div>
+        <div class="step-title">Cleanup Action</div>
+        <div class="step-desc">Priority dispatch & resource allocation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATISTICS ─────────────────────────────── -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="glass stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="big-num" data-target="2847">2,847</div>
+        <div class="big-label">Pollution Reports Filed</div>
+      </div>
+      <div class="glass stat-card">
+        <div class="stat-icon">🌐</div>
+        <div class="big-num" data-target="147">147</div>
+        <div class="big-label">Regions Monitored</div>
+      </div>
+      <div class="glass stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="big-num" data-target="94">94%</div>
+        <div class="big-label">AI Detection Accuracy</div>
+      </div>
+      <div class="glass stat-card">
+        <div class="stat-icon">🐋</div>
+        <div class="big-num" data-target="312">312</div>
+        <div class="big-label">Species Under Protection</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AI DETECTION ──────────────────────────── -->
+<section id="detection" style="background: rgba(0,5,15,0.6);">
+  <div class="container">
+    <div class="section-label">AI Vision</div>
+    <h2 class="section-title">Pollution <span class="gradient-text">Detection Engine</span></h2>
+    <p class="section-desc">Upload any ocean image and our YOLOv8 model will identify pollution types, calculate severity, and recommend cleanup actions.</p>
+
+    <div class="detection-grid">
+      <div>
+        <div class="upload-zone" onclick="simulateDetection()">
+          <div class="upload-icon">🖼️</div>
+          <div style="font-size:1rem;font-weight:600;margin-bottom:0.5rem">Drop image or click to upload</div>
+          <div class="upload-text">Supports JPG, PNG, WEBP — Max 25MB</div>
+          <div style="margin-top:1.5rem">
+            <span class="btn btn-primary" style="pointer-events:none">🤖 Analyze with AI</span>
+          </div>
+        </div>
+        <div class="glass" style="padding:1.2rem 1.5rem;margin-top:1rem">
+          <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.8rem">AI Model Info</div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+            <div><div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--cyan)">YOLOv8x</div><div style="font-size:0.72rem;color:var(--muted)">Detection Model</div></div>
+            <div><div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--aqua)">94.2%</div><div style="font-size:0.72rem;color:var(--muted)">mAP@0.5</div></div>
+            <div><div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--cyan)">&lt;3s</div><div style="font-size:0.72rem;color:var(--muted)">Inference Time</div></div>
+            <div><div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--aqua)">5 Classes</div><div style="font-size:0.72rem;color:var(--muted)">Pollution Types</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="detection-results" id="det-results">
+          <div class="glass" style="padding:1.2rem 1.5rem;margin-bottom:0.5rem">
+            <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--safe);box-shadow:0 0 8px var(--safe);animation:pulse 2s infinite"></div>
+              <span style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)">Detection Results</span>
+              <span style="margin-left:auto;font-size:0.75rem;color:var(--muted)">Click image area to simulate →</span>
+            </div>
+            <div style="color:var(--muted);font-size:0.9rem;text-align:center;padding:2rem 0">Upload an image to see AI detection results</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FORECAST ──────────────────────────────── -->
+<section id="forecast">
+  <div class="container">
+    <div class="section-label">Predictive Intelligence</div>
+    <h2 class="section-title">Ocean <span class="gradient-text">Forecasting System</span></h2>
+    <p class="section-desc">AI-powered temporal prediction models providing 30, 60, and 90-day environmental outlooks for mission-critical decisions.</p>
+
+    <div class="forecast-grid">
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">📈</div>
+        <div class="fc-label">Pollution Growth</div>
+        <div class="fc-val" style="color:var(--warn)">+23.4%</div>
+        <div class="fc-trend">Predicted over next 30 days</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:65%;background:linear-gradient(90deg,#ffa502,#ffcc02)"></div></div>
+      </div>
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">🪸</div>
+        <div class="fc-label">Coral Reef Survival</div>
+        <div class="fc-val" style="color:var(--danger)">34.7%</div>
+        <div class="fc-trend">Great Barrier Reef segment</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:35%;background:linear-gradient(90deg,#ff4757,#ff6b81)"></div></div>
+      </div>
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">💧</div>
+        <div class="fc-label">Water Quality Index</div>
+        <div class="fc-val" style="color:var(--cyan)">71.2</div>
+        <div class="fc-trend">Projected 60-day average</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:71%;background:linear-gradient(90deg,#0066ff,#00d4ff)"></div></div>
+      </div>
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">🐟</div>
+        <div class="fc-label">Biodiversity Risk</div>
+        <div class="fc-val" style="color:var(--danger)">HIGH</div>
+        <div class="fc-trend">12 species at critical risk</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:82%;background:linear-gradient(90deg,#ff4757,#ffa502)"></div></div>
+      </div>
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">🌊</div>
+        <div class="fc-label">Ocean Temp Anomaly</div>
+        <div class="fc-val" style="color:var(--warn)">+1.8°C</div>
+        <div class="fc-trend">Above 1990 baseline average</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:58%;background:linear-gradient(90deg,#ffa502,#ff4757)"></div></div>
+      </div>
+      <div class="glass glow-hover forecast-card">
+        <div class="fc-icon">🧹</div>
+        <div class="fc-label">Cleanup Priority Zones</div>
+        <div class="fc-val" style="color:var(--aqua)">18</div>
+        <div class="fc-trend">Critical intervention needed</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:90%;background:linear-gradient(90deg,#00ffcc,#00d4ff)"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CITIZEN REPORTING ─────────────────────── -->
+<section id="reporting" style="background:rgba(0,5,15,0.6)">
+  <div class="container">
+    <div class="section-label">Citizen Science</div>
+    <h2 class="section-title">Report <span class="gradient-text">Ocean Pollution</span></h2>
+    <p class="section-desc">Every citizen is an ocean guardian. Submit a report and our AI will verify, classify, and escalate your finding to the right authorities.</p>
+
+    <div class="report-grid">
+      <div class="glass" style="padding:2rem">
+        <h3 style="font-family:'Orbitron',monospace;font-size:1rem;margin-bottom:1.5rem;color:var(--cyan)">📋 Submit Pollution Report</h3>
+        <div class="report-form">
+          <div class="form-group">
+            <label>Pollution Type</label>
+            <div class="tag-pills" id="type-pills">
+              <span class="tag-pill active" onclick="selectPill(this)">🛢️ Oil Spill</span>
+              <span class="tag-pill" onclick="selectPill(this)">🧴 Plastic Waste</span>
+              <span class="tag-pill" onclick="selectPill(this)">🎣 Fishing Nets</span>
+              <span class="tag-pill" onclick="selectPill(this)">☣️ Chemical</span>
+              <span class="tag-pill" onclick="selectPill(this)">🚰 Sewage</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Location (GPS Coordinates)</label>
+            <input class="form-input" placeholder="e.g. 13.0827° N, 80.2707° E" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-textarea" placeholder="Describe what you observed — size, color, smell, surrounding conditions..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Upload Evidence Image</label>
+            <div class="upload-zone" style="padding:1.5rem">
+              <div style="font-size:1.5rem;margin-bottom:0.5rem">📷</div>
+              <div style="font-size:0.85rem;color:var(--muted)">Drag & drop image or click</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.9rem" onclick="submitReport()">
+            🚨 Submit Report
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-family:'Orbitron',monospace;font-size:0.9rem;margin-bottom:1.2rem;color:var(--muted)">Recent Reports — Live Feed</h3>
+        <div class="risk-list" id="risk-list">
+          <div class="glass risk-item">
+            <div class="risk-dot" style="background:var(--danger);box-shadow:0 0 8px var(--danger);border-radius:50%"></div>
+            <div class="risk-info">
+              <div class="risk-name">Oil Spill — Bay of Bengal</div>
+              <div class="risk-loc">📍 13.09°N, 80.27°E • Reported 12 min ago</div>
+            </div>
+            <span class="risk-badge badge-critical">CRITICAL</span>
+          </div>
+          <div class="glass risk-item">
+            <div class="risk-dot" style="background:var(--warn);box-shadow:0 0 8px var(--warn);border-radius:50%"></div>
+            <div class="risk-info">
+              <div class="risk-name">Plastic Accumulation — Arabian Sea</div>
+              <div class="risk-loc">📍 12.97°N, 77.56°E • Reported 34 min ago</div>
+            </div>
+            <span class="risk-badge badge-high">HIGH</span>
+          </div>
+          <div class="glass risk-item">
+            <div class="risk-dot" style="background:var(--warn);box-shadow:0 0 8px var(--warn);border-radius:50%"></div>
+            <div class="risk-info">
+              <div class="risk-name">Fishing Net Entanglement — Pacific</div>
+              <div class="risk-loc">📍 35.68°N, 139.76°E • Reported 1h ago</div>
+            </div>
+            <span class="risk-badge badge-high">HIGH</span>
+          </div>
+          <div class="glass risk-item">
+            <div class="risk-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan);border-radius:50%"></div>
+            <div class="risk-info">
+              <div class="risk-name">Chemical Discharge — Mediterranean</div>
+              <div class="risk-loc">📍 41.90°N, 12.49°E • Reported 2h ago</div>
+            </div>
+            <span class="risk-badge badge-medium">MEDIUM</span>
+          </div>
+          <div class="glass risk-item">
+            <div class="risk-dot" style="background:var(--safe);box-shadow:0 0 8px var(--safe);border-radius:50%"></div>
+            <div class="risk-info">
+              <div class="risk-name">Sewage Outfall — Atlantic Coast</div>
+              <div class="risk-loc">📍 40.71°N, 74.00°W • Cleanup Initiated</div>
+            </div>
+            <span class="risk-badge" style="background:rgba(46,213,115,0.2);color:var(--safe);border:1px solid rgba(46,213,115,0.4)">RESOLVED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────── -->
+<footer id="about">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo" style="justify-content:flex-start;margin-bottom:1rem">
+        <div class="logo-icon">🌊</div>
+        Marine Guard AI
+      </div>
+      <p>AI-powered ocean pollution monitoring and environmental protection system. Protecting marine ecosystems with cutting-edge machine learning and citizen science.</p>
+      <div class="social-links" style="margin-top:1.5rem">
+        <a class="social-link" href="#">𝕏</a>
+        <a class="social-link" href="#">in</a>
+        <a class="social-link" href="#">⌨</a>
+        <a class="social-link" href="#">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#">Live Dashboard</a></li>
+        <li><a href="#">AI Detection</a></li>
+        <li><a href="#">Ocean Forecast</a></li>
+        <li><a href="#">Report Portal</a></li>
+        <li><a href="#">Analytics</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Research</a></li>
+        <li><a href="#">Partners</a></li>
+        <li><a href="#">API Access</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Data Portal</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Marine Guard AI. Protecting Oceans with Artificial Intelligence.</p>
+    <p style="color:var(--muted)">Privacy Policy · Terms · Cookie Policy</p>
+  </div>
+</footer>
+
+<!-- ─── AUTH PAGE ──────────────────────────────── -->
+<div id="auth-page">
+  <canvas id="auth-canvas" style="position:absolute;inset:0;pointer-events:none"></canvas>
+  <div class="auth-box glass">
+    <div class="nav-logo" style="justify-content:center;font-size:1.1rem;margin-bottom:1.5rem">
+      <div class="logo-icon">🌊</div>
+      Marine Guard AI
+    </div>
+    <div class="auth-title gradient-text" id="auth-title">Welcome Back</div>
+    <div class="auth-sub" id="auth-sub">Sign in to your ocean guardian account</div>
+
+    <div id="auth-login">
+      <div class="auth-form">
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon">✉️</span>
+          <input type="email" class="auth-input" placeholder="Email address" />
+        </div>
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon">🔒</span>
+          <input type="password" class="auth-input" placeholder="Password" />
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.9rem" onclick="showDashboard()">
+          Sign In →
+        </button>
+        <div class="auth-divider">or</div>
+        <div style="text-align:center;font-size:0.85rem;color:var(--muted)">
+          No account? <span onclick="showAuth('signup')" style="color:var(--cyan);cursor:pointer">Create one free</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="auth-signup" style="display:none">
+      <div class="auth-form">
+        <div class="role-select">
+          <div class="role-btn selected" onclick="selectRole(this)">👤 Citizen</div>
+          <div class="role-btn" onclick="selectRole(this)">🏛️ Agency</div>
+          <div class="role-btn" onclick="selectRole(this)">🔬 Researcher</div>
+        </div>
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon">👤</span>
+          <input type="text" class="auth-input" placeholder="Full name" />
+        </div>
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon">✉️</span>
+          <input type="email" class="auth-input" placeholder="Email address" />
+        </div>
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon">🔒</span>
+          <input type="password" class="auth-input" placeholder="Create password" />
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.9rem" onclick="showDashboard()">
+          Create Account →
+        </button>
+        <div style="text-align:center;font-size:0.85rem;color:var(--muted)">
+          Have an account? <span onclick="showAuth('login')" style="color:var(--cyan);cursor:pointer">Sign in</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:1.5rem">
+      <span class="auth-back" onclick="closeAuth()">← Back to Home</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── DASHBOARD PAGE ────────────────────────── -->
+<div id="dashboard-page">
+  <div class="db-sidebar">
+    <div class="sidebar-logo">🌊 Marine Guard</div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <div class="sidebar-item active" onclick="setTab(this,'overview')"><span class="s-icon">📊</span>Dashboard</div>
+      <div class="sidebar-item" onclick="setTab(this,'analytics')"><span class="s-icon">📈</span>Analytics</div>
+      <div class="sidebar-item" onclick="setTab(this,'ai')"><span class="s-icon">🤖</span>AI Detection</div>
+      <div class="sidebar-item" onclick="setTab(this,'reports')"><span class="s-icon">📝</span>Upload Reports</div>
+
+      <div class="sidebar-section">Monitoring</div>
+      <div class="sidebar-item" onclick="setTab(this,'health')"><span class="s-icon">💧</span>Ocean Health</div>
+      <div class="sidebar-item" onclick="setTab(this,'risk')"><span class="s-icon">⚠️</span>Risk Zones</div>
+      <div class="sidebar-item" onclick="setTab(this,'bio')"><span class="s-icon">🐠</span>Biodiversity</div>
+
+      <div class="sidebar-section">System</div>
+      <div class="sidebar-item" onclick="setTab(this,'notif')"><span class="s-icon">🔔</span>Notifications <span style="margin-left:auto;background:var(--danger);color:#fff;font-size:0.65rem;padding:0.15rem 0.45rem;border-radius:50px;font-weight:700">3</span></div>
+      <div class="sidebar-item" onclick="setTab(this,'settings')"><span class="s-icon">⚙️</span>Settings</div>
+      <div class="sidebar-item" onclick="closeDashboard()" style="margin-top:auto"><span class="s-icon">🚪</span>Exit</div>
+    </div>
+  </div>
+
+  <div class="db-main">
+    <div class="db-topnav">
+      <div class="db-search">
+        <span style="color:var(--muted)">🔍</span>
+        <input placeholder="Search regions, reports, species..." />
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:1rem">
+        <div class="ocean-status">
+          <div class="live-dot"></div>
+          Ocean: STABLE
+        </div>
+        <div class="glass" style="padding:0.4rem;cursor:pointer;border-radius:8px;position:relative">
+          🔔
+          <span style="position:absolute;top:-4px;right:-4px;background:var(--danger);width:16px;height:16px;border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;font-weight:700">3</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;cursor:pointer">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));display:flex;align-items:center;justify-content:center;font-size:0.9rem">👤</div>
+          <span style="font-size:0.85rem;font-weight:600">Guardian</span>
+        </div>
+        <button class="back-btn" onclick="closeDashboard()">✕ Exit</button>
+      </div>
+    </div>
+
+    <div class="db-content">
+      <!-- OVERVIEW TAB -->
+      <div id="tab-overview" class="tab-content active">
+        <div class="db-section-title">
+          <span>📊</span> Ocean Intelligence Overview
+          <span style="margin-left:auto;font-size:0.75rem;color:var(--muted);font-family:'Share Tech Mono',monospace" id="live-time"></span>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="glass kpi-card" style="--kc:var(--danger)">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--danger),transparent)"></div>
+            <div class="kpi-label">Pollution Index</div>
+            <div class="kpi-val" style="color:var(--danger)">72.4</div>
+            <div class="kpi-change down">▲ +3.2 this week</div>
+            <div class="kpi-icon">🏭</div>
+          </div>
+          <div class="glass kpi-card">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--safe),transparent)"></div>
+            <div class="kpi-label">Ocean Health</div>
+            <div class="kpi-val" style="color:var(--safe)">62.8</div>
+            <div class="kpi-change up">◉ Stable</div>
+            <div class="kpi-icon">💧</div>
+          </div>
+          <div class="glass kpi-card">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent)"></div>
+            <div class="kpi-label">Active Reports</div>
+            <div class="kpi-val" style="color:var(--cyan)">2,847</div>
+            <div class="kpi-change up">▲ +124 today</div>
+            <div class="kpi-icon">📋</div>
+          </div>
+          <div class="glass kpi-card">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--warn),transparent)"></div>
+            <div class="kpi-label">High Risk Zones</div>
+            <div class="kpi-val" style="color:var(--warn)">18</div>
+            <div class="kpi-change down">▲ +2 new</div>
+            <div class="kpi-icon">⚠️</div>
+          </div>
+          <div class="glass kpi-card">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--aqua),transparent)"></div>
+            <div class="kpi-label">Cleanup Ops</div>
+            <div class="kpi-val" style="color:var(--aqua)">34</div>
+            <div class="kpi-change up">▲ 8 ongoing</div>
+            <div class="kpi-icon">🧹</div>
+          </div>
+          <div class="glass kpi-card">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--danger),transparent)"></div>
+            <div class="kpi-label">Biodiv. Risk</div>
+            <div class="kpi-val" style="color:var(--danger)">HIGH</div>
+            <div class="kpi-change down">12 species</div>
+            <div class="kpi-icon">🐠</div>
+          </div>
+        </div>
+
+        <!-- Interactive Map -->
+        <div class="map-container">
+          <div class="map-bg"></div>
+          <div class="map-grid-lines"></div>
+          <div class="map-markers">
+            <!-- Critical zones -->
+            <div class="map-marker" style="top:38%;left:68%">
+              <div class="marker-ring" style="width:50px;height:50px;border-color:var(--danger)">
+                <div class="marker-dot" style="width:14px;height:14px;background:var(--danger)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:55%;left:28%">
+              <div class="marker-ring" style="width:40px;height:40px;border-color:var(--warn);animation-delay:0.5s">
+                <div class="marker-dot" style="width:10px;height:10px;background:var(--warn)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:25%;left:48%">
+              <div class="marker-ring" style="width:45px;height:45px;border-color:var(--danger);animation-delay:1s">
+                <div class="marker-dot" style="width:12px;height:12px;background:var(--danger)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:70%;left:55%">
+              <div class="marker-ring" style="width:32px;height:32px;border-color:var(--safe);animation-delay:1.5s">
+                <div class="marker-dot" style="width:8px;height:8px;background:var(--safe)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:45%;left:15%">
+              <div class="marker-ring" style="width:38px;height:38px;border-color:var(--warn);animation-delay:0.7s">
+                <div class="marker-dot" style="width:10px;height:10px;background:var(--warn)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:30%;left:82%">
+              <div class="marker-ring" style="width:36px;height:36px;border-color:var(--warn);animation-delay:1.2s">
+                <div class="marker-dot" style="width:9px;height:9px;background:var(--warn)"></div>
+              </div>
+            </div>
+            <div class="map-marker" style="top:62%;left:78%">
+              <div class="marker-ring" style="width:30px;height:30px;border-color:var(--cyan);animation-delay:0.3s">
+                <div class="marker-dot" style="width:8px;height:8px;background:var(--cyan)"></div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;top:1rem;left:1.5rem;background:rgba(0,10,25,0.85);backdrop-filter:blur(10px);padding:0.5rem 1rem;border-radius:8px;border:1px solid var(--border);z-index:3">
+            <span style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--cyan)">🌍 Global Pollution Map — Live</span>
+          </div>
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div>Critical Zone</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--warn)"></div>High Risk</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Monitoring</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--safe)"></div>Cleanup Active</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="chart-section">
+          <div class="glass mini-chart">
+            <div class="mc-title">Pollution Index Trend (30d)</div>
+            <div class="mc-body" id="mc1"></div>
+          </div>
+          <div class="glass mini-chart">
+            <div class="mc-title">Ocean Health Score (30d)</div>
+            <div class="mc-body" id="mc2"></div>
+          </div>
+          <div class="glass mini-chart">
+            <div class="mc-title">Reports Filed Daily</div>
+            <div class="mc-body" id="mc3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI DETECTION TAB -->
+      <div id="tab-ai" class="tab-content">
+        <div class="db-section-title"><span>🤖</span> AI Pollution Detection Engine</div>
+        <div class="ai-panel-grid">
+          <div>
+            <div class="ai-upload-area glass" onclick="simulateDetection()">
+              <div style="font-size:3rem;margin-bottom:1rem">🖼️</div>
+              <div style="font-size:0.95rem;font-weight:600;margin-bottom:0.4rem">Drop Ocean Image Here</div>
+              <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem">YOLOv8 will detect pollution in real-time</div>
+              <span class="btn btn-primary">🤖 Analyze Image</span>
+            </div>
+            <div class="confidence-meter glass">
+              <div class="conf-label">AI Confidence Meter</div>
+              <div class="conf-circle"><div class="conf-val">94%</div></div>
+              <div style="display:flex;justify-content:center;gap:2rem;font-size:0.78rem;color:var(--muted)">
+                <span>Model: YOLOv8x</span>
+                <span>Classes: 5</span>
+                <span>Inference: 2.7s</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem">Live Detection Results</div>
+            <div class="ai-results" id="ai-det-results">
+              <div class="glass ai-result-item">
+                <div class="ai-type-icon">🧴</div>
+                <div class="ai-type-info">
+                  <div class="ai-type-name">Plastic Waste</div>
+                  <div class="ai-type-bar"><div class="ai-type-fill" style="width:78%;background:linear-gradient(90deg,#0066ff,#00d4ff)"></div></div>
+                </div>
+                <div class="ai-pct" style="color:var(--cyan)">78%</div>
+              </div>
+              <div class="glass ai-result-item">
+                <div class="ai-type-icon">🛢️</div>
+                <div class="ai-type-info">
+                  <div class="ai-type-name">Oil Spill</div>
+                  <div class="ai-type-bar"><div class="ai-type-fill" style="width:12%;background:linear-gradient(90deg,#ff4757,#ffa502)"></div></div>
+                </div>
+                <div class="ai-pct" style="color:var(--danger)">12%</div>
+              </div>
+              <div class="glass ai-result-item">
+                <div class="ai-type-icon">🎣</div>
+                <div class="ai-type-info">
+                  <div class="ai-type-name">Fishing Nets</div>
+                  <div class="ai-type-bar"><div class="ai-type-fill" style="width:10%;background:linear-gradient(90deg,#ffa502,#ffcc02)"></div></div>
+                </div>
+                <div class="ai-pct" style="color:var(--warn)">10%</div>
+              </div>
+              <div class="glass ai-result-item" style="margin-top:0.5rem;border:1px solid rgba(255,71,87,0.3)">
+                <div style="font-size:0.8rem;color:var(--muted)">Risk Assessment:</div>
+                <div style="font-weight:700;color:var(--danger)">HIGH SEVERITY</div>
+                <span class="risk-badge badge-critical" style="margin-left:auto">Cleanup Required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RISK ZONES TAB -->
+      <div id="tab-risk" class="tab-content">
+        <div class="db-section-title"><span>⚠️</span> Active Risk Zones</div>
+        <div class="risk-list">
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--danger);border-radius:50%"></div><div class="risk-info"><div class="risk-name">Great Pacific Garbage Patch</div><div class="risk-loc">📍 38°N, 145°W · 1.6M km² · Est. 80,000 tonnes</div></div><span class="risk-badge badge-critical">CRITICAL</span></div>
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--danger);border-radius:50%"></div><div class="risk-info"><div class="risk-name">Bay of Bengal Oil Corridor</div><div class="risk-loc">📍 13.09°N, 80.27°E · Active spill detected</div></div><span class="risk-badge badge-critical">CRITICAL</span></div>
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--warn);border-radius:50%"></div><div class="risk-info"><div class="risk-name">Mediterranean Plastic Gyre</div><div class="risk-loc">📍 38°N, 14°E · Chemical runoff from 6 nations</div></div><span class="risk-badge badge-high">HIGH</span></div>
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--warn);border-radius:50%"></div><div class="risk-info"><div class="risk-name">South China Sea Dead Zone</div><div class="risk-loc">📍 14°N, 114°E · Hypoxic event in progress</div></div><span class="risk-badge badge-high">HIGH</span></div>
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--cyan);border-radius:50%"></div><div class="risk-info"><div class="risk-name">Arabian Sea Sewage Plume</div><div class="risk-loc">📍 12.97°N, 77.56°E · Monitoring elevated</div></div><span class="risk-badge badge-medium">MEDIUM</span></div>
+          <div class="glass risk-item glow-hover"><div class="risk-dot" style="background:var(--cyan);border-radius:50%"></div><div class="risk-info"><div class="risk-name">Atlantic Microplastic Belt</div><div class="risk-loc">📍 30°N, 40°W · Long-term accumulation zone</div></div><span class="risk-badge badge-medium">MEDIUM</span></div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS TAB -->
+      <div id="tab-notif" class="tab-content">
+        <div class="db-section-title"><span>🔔</span> Alert Center</div>
+        <div class="notif-list">
+          <div class="glass notif-item" style="border-left:3px solid var(--danger)">
+            <div class="notif-icon">🚨</div>
+            <div class="notif-content">
+              <div class="ntitle">CRITICAL: New Oil Spill Detected — Bay of Bengal</div>
+              <div class="ndesc">AI detected 94% confidence oil spill, 12km² estimated area. Cleanup team alerted.</div>
+              <div class="ntime">2 minutes ago</div>
+            </div>
+            <span class="risk-badge badge-critical notif-badge">New</span>
+          </div>
+          <div class="glass notif-item" style="border-left:3px solid var(--warn)">
+            <div class="notif-icon">⚠️</div>
+            <div class="notif-content">
+              <div class="ntitle">High Risk: Plastic Density Exceeds Threshold</div>
+              <div class="ndesc">Arabian Sea sector reports plastic concentration 340% above safe levels.</div>
+              <div class="ntime">18 minutes ago</div>
+            </div>
+            <span class="risk-badge badge-high notif-badge">Unread</span>
+          </div>
+          <div class="glass notif-item" style="border-left:3px solid var(--cyan)">
+            <div class="notif-icon">📋</div>
+            <div class="notif-content">
+              <div class="ntitle">Citizen Report Verified — Pacific Northwest</div>
+              <div class="ndesc">Report #CR-2847 verified by AI analysis. Escalated to EPA regional office.</div>
+              <div class="ntime">45 minutes ago</div>
+            </div>
+          </div>
+          <div class="glass notif-item" style="border-left:3px solid var(--safe)">
+            <div class="notif-icon">✅</div>
+            <div class="notif-content">
+              <div class="ntitle">Cleanup Complete — Mediterranean Zone 4</div>
+              <div class="ndesc">Operation MED-04 completed. 847 tonnes of plastic removed. Zone reclassified as safe.</div>
+              <div class="ntime">2 hours ago</div>
+            </div>
+          </div>
+          <div class="glass notif-item" style="border-left:3px solid var(--muted)">
+            <div class="notif-icon">🔬</div>
+            <div class="notif-content">
+              <div class="ntitle">AI Model Updated — YOLOv8 v4.2.1</div>
+              <div class="ndesc">Detection accuracy improved to 94.7% on plastic waste category. No action required.</div>
+              <div class="ntime">5 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS TAB -->
+      <div id="tab-reports" class="tab-content">
+        <div class="db-section-title"><span>📝</span> Upload Pollution Report</div>
+        <div style="max-width:680px">
+          <div class="glass" style="padding:2rem">
+            <div class="report-form">
+              <div class="form-group">
+                <label>Pollution Type</label>
+                <div class="tag-pills">
+                  <span class="tag-pill active" onclick="selectPill(this)">🛢️ Oil Spill</span>
+                  <span class="tag-pill" onclick="selectPill(this)">🧴 Plastic</span>
+                  <span class="tag-pill" onclick="selectPill(this)">🎣 Fishing Net</span>
+                  <span class="tag-pill" onclick="selectPill(this)">☣️ Chemical</span>
+                  <span class="tag-pill" onclick="selectPill(this)">🚰 Sewage</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group">
+                  <label>Latitude</label>
+                  <input class="form-input" placeholder="e.g. 13.08°N" />
+                </div>
+                <div class="form-group">
+                  <label>Longitude</label>
+                  <input class="form-input" placeholder="e.g. 80.27°E" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Severity Estimate</label>
+                <select class="form-select">
+                  <option>Low — Minor, localized impact</option>
+                  <option>Medium — Moderate spread, some wildlife risk</option>
+                  <option selected>High — Large area, significant risk</option>
+                  <option>Critical — Immediate intervention required</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-textarea" placeholder="Describe observed conditions..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Evidence Image</label>
+                <div class="upload-zone" style="padding:1.5rem">
+                  <div style="font-size:2rem;margin-bottom:0.5rem">📷</div>
+                  <div style="font-size:0.85rem;color:var(--muted)">Drag & drop or click to select</div>
+                </div>
+              </div>
+              <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.9rem" onclick="submitReport()">
+                🚨 Submit & Run AI Analysis
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIODIVERSITY TAB -->
+      <div id="tab-bio" class="tab-content">
+        <div class="db-section-title"><span>🐠</span> Biodiversity Tracker</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🐋</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Blue Whale</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">North Pacific Population</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:23%;height:100%;background:linear-gradient(90deg,var(--danger),var(--warn));border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Population Health</span><span style="color:var(--danger);font-weight:700">23% — Critical</span></div>
+          </div>
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🐢</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Hawksbill Turtle</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">Indo-Pacific Region</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:35%;height:100%;background:linear-gradient(90deg,var(--warn),#ffcc02);border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Population Health</span><span style="color:var(--warn);font-weight:700">35% — Endangered</span></div>
+          </div>
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🦈</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Great White Shark</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">Global Oceans</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:48%;height:100%;background:linear-gradient(90deg,var(--warn),var(--cyan));border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Population Health</span><span style="color:var(--cyan);font-weight:700">48% — Vulnerable</span></div>
+          </div>
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🪸</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Coral Reefs</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">Great Barrier Reef</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:34%;height:100%;background:linear-gradient(90deg,var(--danger),var(--warn));border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Reef Coverage</span><span style="color:var(--danger);font-weight:700">34% — Critical</span></div>
+          </div>
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🦭</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Hawaiian Monk Seal</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">Hawaiian Archipelago</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:18%;height:100%;background:linear-gradient(90deg,var(--danger),#ff6b81);border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Population Health</span><span style="color:var(--danger);font-weight:700">18% — Critical</span></div>
+          </div>
+          <div class="glass glow-hover" style="padding:1.5rem">
+            <div style="font-size:2rem;margin-bottom:0.8rem">🐬</div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:0.4rem">Spinner Dolphin</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">Pacific Ocean</div>
+            <div style="background:rgba(255,255,255,0.08);height:6px;border-radius:50px;margin-bottom:0.5rem"><div style="width:62%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--aqua));border-radius:50px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--muted)">Population Health</span><span style="color:var(--cyan);font-weight:700">62% — Stable</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OCEAN HEALTH TAB -->
+      <div id="tab-health" class="tab-content">
+        <div class="db-section-title"><span>💧</span> Ocean Health Monitor</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">pH Level (Pacific)</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--warn)">8.02</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Normal: 8.1–8.3 · Slightly acidic</div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">Sea Surface Temp</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--danger)">+1.8°C</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Above 1990 baseline average</div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">Dissolved Oxygen</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--cyan)">6.4 mg/L</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Minimum threshold: 5.0 mg/L</div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">Turbidity (NTU)</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--aqua)">12.7</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Acceptable range: &lt;25 NTU</div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">Salinity (PSU)</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--safe)">34.8</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Normal range: 34–36 PSU</div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem">Overall Health Index</div>
+            <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;color:var(--warn)">62.8 / 100</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Declining — Intervention needed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" class="tab-content">
+        <div class="db-section-title"><span>⚙️</span> Platform Settings</div>
+        <div style="max-width:600px;display:flex;flex-direction:column;gap:1rem">
+          <div class="glass" style="padding:1.5rem">
+            <h4 style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:1.2rem;color:var(--cyan)">AI Detection Settings</h4>
+            <div style="display:flex;flex-direction:column;gap:0.8rem">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.88rem">Auto-detect on upload</span>
+                <div style="width:44px;height:24px;border-radius:50px;background:var(--cyan);cursor:pointer;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;right:3px;top:3px"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.88rem">High-confidence alerts only (>85%)</span>
+                <div style="width:44px;height:24px;border-radius:50px;background:rgba(255,255,255,0.1);cursor:pointer;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:var(--muted);position:absolute;left:3px;top:3px"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.88rem">Real-time WebSocket updates</span>
+                <div style="width:44px;height:24px;border-radius:50px;background:var(--cyan);cursor:pointer;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;right:3px;top:3px"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <h4 style="font-family:'Orbitron',monospace;font-size:0.85rem;margin-bottom:1.2rem;color:var(--cyan)">Notification Preferences</h4>
+            <div style="display:flex;flex-direction:column;gap:0.8rem">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:0.88rem">Critical zone alerts</span><div style="width:44px;height:24px;border-radius:50px;background:var(--danger);cursor:pointer;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;right:3px;top:3px"></div></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:0.88rem">Cleanup operation updates</span><div style="width:44px;height:24px;border-radius:50px;background:var(--cyan);cursor:pointer;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;right:3px;top:3px"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS TAB -->
+      <div id="tab-analytics" class="tab-content">
+        <div class="db-section-title"><span>📈</span> Deep Analytics</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div class="glass" style="padding:1.5rem">
+            <div class="mc-title">Pollution by Type (Last 30d)</div>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem">
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🧴 Plastic Waste</span><span style="color:var(--cyan)">42%</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:42%;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🛢️ Oil Spills</span><span style="color:var(--danger)">27%</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:27%;height:100%;background:linear-gradient(90deg,var(--danger),#ff6b81);border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>☣️ Chemical</span><span style="color:var(--warn)">18%</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:18%;height:100%;background:linear-gradient(90deg,var(--warn),#ffcc02);border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🎣 Fishing Nets</span><span style="color:var(--aqua)">8%</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:8%;height:100%;background:linear-gradient(90deg,var(--aqua),var(--cyan));border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🚰 Sewage</span><span style="color:var(--muted)">5%</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:5%;height:100%;background:rgba(106,154,176,0.6);border-radius:50px"></div></div></div>
+            </div>
+          </div>
+          <div class="glass" style="padding:1.5rem">
+            <div class="mc-title">Regional Impact Score</div>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem">
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🌏 Asia Pacific</span><span style="color:var(--danger)">84/100</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:84%;height:100%;background:linear-gradient(90deg,var(--danger),var(--warn));border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🌊 Pacific Ocean</span><span style="color:var(--warn)">71/100</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:71%;height:100%;background:linear-gradient(90deg,var(--warn),#ffcc02);border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🌍 Mediterranean</span><span style="color:var(--cyan)">58/100</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:58%;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>🌎 Atlantic</span><span style="color:var(--aqua)">43/100</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:43%;height:100%;background:linear-gradient(90deg,var(--aqua),var(--cyan));border-radius:50px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem"><span>❄️ Arctic Ocean</span><span style="color:var(--safe)">22/100</span></div><div style="background:rgba(255,255,255,0.08);height:8px;border-radius:50px"><div style="width:22%;height:100%;background:linear-gradient(90deg,var(--safe),var(--aqua));border-radius:50px"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ──────────────────────────────────── -->
+<div id="toast" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:0.75rem;pointer-events:none"></div>
+
+<script>
+// ─── CANVAS OCEAN ANIMATION ─────────────────────
+const canvas = document.getElementById('ocean-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], waves = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Particles
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * 1920,
+    y: Math.random() * 1080,
+    r: Math.random() * 2 + 0.5,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: -Math.random() * 0.5 - 0.2,
+    alpha: Math.random() * 0.4 + 0.1
+  });
+}
+
+function drawOcean() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Deep gradient bg
+  const bg = ctx.createRadialGradient(W/2, H, 0, W/2, H/2, H);
+  bg.addColorStop(0, 'rgba(0,60,120,0.15)');
+  bg.addColorStop(0.5, 'rgba(0,30,70,0.08)');
+  bg.addColorStop(1, 'transparent');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Wave layers
+  const t = Date.now() / 3000;
+  [
+    { y: H * 0.7, amp: 25, freq: 0.008, phase: t, alpha: 0.04, color: '#00d4ff' },
+    { y: H * 0.75, amp: 18, freq: 0.01, phase: t * 1.3 + 1, alpha: 0.03, color: '#0066ff' },
+    { y: H * 0.8, amp: 12, freq: 0.015, phase: t * 0.7 + 2, alpha: 0.025, color: '#00ffcc' },
+  ].forEach(wave => {
+    ctx.beginPath();
+    ctx.moveTo(0, wave.y);
+    for (let x = 0; x <= W; x += 4) {
+      ctx.lineTo(x, wave.y + Math.sin(x * wave.freq + wave.phase) * wave.amp);
+    }
+    ctx.lineTo(W, H); ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fillStyle = wave.color.replace(')', `,${wave.alpha})`).replace('rgb', 'rgba').replace('##', '#');
+    ctx.fillStyle = wave.color + Math.round(wave.alpha * 255).toString(16).padStart(2,'0');
+    ctx.fill();
+  });
+
+  // Particles
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+    grd.addColorStop(0, `rgba(0,212,255,${p.alpha})`);
+    grd.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawOcean);
+}
+drawOcean();
+
+// ─── PARTICLES DOM ──────────────────────────────
+const pContainer = document.getElementById('particles');
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 6 + 2;
+  p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s`;
+  pContainer.appendChild(p);
+}
+
+// ─── COUNTER ANIMATION ──────────────────────────
+function animateCounter(el, target) {
+  let current = 0;
+  const inc = target / 60;
+  const step = () => {
+    current = Math.min(current + inc, target);
+    el.textContent = Math.floor(current).toLocaleString();
+    if (current < target) requestAnimationFrame(step);
+  };
+  step();
+}
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const els = e.target.querySelectorAll('[data-count]');
+      els.forEach(el => animateCounter(el, parseInt(el.dataset.count)));
+      observer.unobserve(e.target);
+    }
+  });
+});
+document.querySelectorAll('#hero,#stats').forEach(s => observer.observe(s));
+
+// ─── MINI CHARTS ────────────────────────────────
+function buildMiniCharts() {
+  const data1 = [45,52,48,60,58,65,62,70,68,72,75,71,74,78,82,79,83,80,85,84,88,86,90,87,89,91,88,92,94,90];
+  const data2 = [80,78,76,77,74,75,72,70,71,68,67,69,65,66,64,62,63,61,59,60,58,57,59,56,57,55,54,56,53,62];
+  const data3 = [60,75,55,90,80,110,95,120,100,85,130,115,105,125,140,120,110,145,130,150,125,160,140,155,170,145,165,180,155,175];
+
+  [[data1,'mc1','#0066ff,#00d4ff'],[data2,'mc2','#2ed573,#00ffcc'],[data3,'mc3','#ffa502,#ffcc02']].forEach(([d,id,colors]) => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    const max = Math.max(...d);
+    d.forEach((v,i) => {
+      const bar = document.createElement('div');
+      bar.className = 'mc-bar';
+      bar.style.cssText = `height:${(v/max)*100}%;background:linear-gradient(to top,${colors});animation-delay:${i*0.03}s`;
+      c.appendChild(bar);
+    });
+  });
+}
+buildMiniCharts();
+
+// ─── LIVE TIME ──────────────────────────────────
+function updateTime() {
+  const el = document.getElementById('live-time');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-US',{hour12:false});
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// ─── PAGE NAVIGATION ────────────────────────────
+function showAuth(mode) {
+  const p = document.getElementById('auth-page');
+  p.classList.add('active');
+  if (mode === 'login') {
+    document.getElementById('auth-title').textContent = 'Welcome Back';
+    document.getElementById('auth-sub').textContent = 'Sign in to your ocean guardian account';
+    document.getElementById('auth-login').style.display = 'block';
+    document.getElementById('auth-signup').style.display = 'none';
+  } else {
+    document.getElementById('auth-title').textContent = 'Join the Mission';
+    document.getElementById('auth-sub').textContent = 'Create your guardian account today';
+    document.getElementById('auth-login').style.display = 'none';
+    document.getElementById('auth-signup').style.display = 'block';
+  }
+}
+function closeAuth() { document.getElementById('auth-page').classList.remove('active'); }
+function showDashboard() {
+  document.getElementById('auth-page').classList.remove('active');
+  document.getElementById('dashboard-page').classList.add('active');
+}
+function closeDashboard() { document.getElementById('dashboard-page').classList.remove('active'); }
+
+function setTab(el, name) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById('tab-' + name);
+  if (target) target.classList.add('active');
+}
+
+// ─── DETECTION SIMULATION ───────────────────────
+function simulateDetection() {
+  const results = document.getElementById('det-results');
+  if (!results) return;
+  results.innerHTML = `<div class="glass" style="padding:1.2rem 1.5rem"><div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem"><div style="width:10px;height:10px;border-radius:50%;background:var(--cyan);animation:pulse 0.8s infinite"></div><span style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--cyan)">AI Analysis Running...</span></div><div style="color:var(--muted);font-size:0.85rem">YOLOv8 processing image…</div></div>`;
+  setTimeout(() => {
+    results.innerHTML = `
+    <div class="glass" style="padding:1rem 1.5rem;margin-bottom:0.5rem;border:1px solid rgba(255,71,87,0.3)">
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.8rem">Detection Complete — 2.7s</div>
+      <div style="font-size:0.82rem;color:var(--danger);font-weight:700;margin-bottom:0.3rem">⚠️ HIGH SEVERITY POLLUTION DETECTED</div>
+      <div style="font-size:0.8rem;color:var(--muted)">Recommended: Immediate cleanup dispatch</div>
+    </div>
+    ${[['🧴','Plastic Waste','78%','linear-gradient(90deg,#0066ff,#00d4ff)','var(--cyan)'],['🛢️','Oil Spill','12%','linear-gradient(90deg,#ff4757,#ffa502)','var(--danger)'],['🎣','Fishing Nets','10%','linear-gradient(90deg,#ffa502,#ffcc02)','var(--warn)']].map(([icon,name,pct,grad,col])=>`
+    <div class="glass det-item">
+      <div class="det-icon">${icon}</div>
+      <div class="det-info">
+        <div class="det-name">${name}</div>
+        <div class="det-bar-wrap"><div class="det-bar" style="width:${pct};background:${grad}"></div></div>
+      </div>
+      <div class="det-pct" style="color:${col}">${pct}</div>
+    </div>`).join('')}`;
+    showToast('🤖 AI Detection Complete — High severity detected', 'warning');
+  }, 2000);
+}
+
+// ─── PILL SELECT ────────────────────────────────
+function selectPill(el) {
+  el.closest('.tag-pills').querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+function selectRole(el) {
+  el.closest('.role-select').querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── SUBMIT REPORT ──────────────────────────────
+function submitReport() {
+  showToast('✅ Report submitted successfully! AI verification in progress...', 'success');
+  setTimeout(() => showToast('🤖 AI verified report — Escalating to authorities', 'info'), 2000);
+}
+
+// ─── TOAST ──────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const colors = { success: 'var(--safe)', warning: 'var(--warn)', info: 'var(--cyan)', error: 'var(--danger)' };
+  const t = document.createElement('div');
+  t.style.cssText = `background:rgba(0,20,40,0.95);backdrop-filter:blur(20px);border:1px solid ${colors[type]};border-left:3px solid ${colors[type]};border-radius:12px;padding:1rem 1.5rem;max-width:380px;font-size:0.88rem;color:var(--text);animation:fadeInUp 0.3s ease;box-shadow:0 8px 30px rgba(0,0,0,0.4);pointer-events:all;cursor:pointer`;
+  t.textContent = msg;
+  t.onclick = () => t.remove();
+  document.getElementById('toast').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 4000);
+}
+
+// ─── LIVE DATA SIMULATION ───────────────────────
+setInterval(() => {
+  const rand = Math.random();
+  if (rand < 0.3) showToast('🚨 New pollution report filed — ' + ['Bay of Bengal','Pacific Rim','Mediterranean','Arabian Sea'][Math.floor(Math.random()*4)], 'warning');
+  else if (rand < 0.5) showToast('✅ Cleanup operation update — Zone cleared', 'success');
+}, 12000);
+
+// ─── SMOOTH SCROLL ──────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+console.log('%c🌊 Marine Guard AI — Protecting Oceans with Artificial Intelligence', 'color:#00d4ff;font-size:14px;font-weight:bold');
+</script>
+</body>
+</html>

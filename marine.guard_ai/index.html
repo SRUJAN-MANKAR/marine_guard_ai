@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marine Guard AI — Protecting Oceans with Artificial Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand">
+    <span class="nav-logo">🌊</span>
+    <span class="nav-title">Marine Guard <span class="accent">AI</span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#ai-detect">AI Detection</a></li>
+    <li><a href="#report">Report</a></li>
+    <li><a href="#forecast">Forecast</a></li>
+  </ul>
+  <div class="nav-actions">
+    <span class="live-badge">● LIVE</span>
+    <button class="btn-ghost" onclick="showAuth('login')">Login</button>
+    <button class="btn-primary" onclick="showAuth('signup')">Get Started</button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="home">
+  <canvas id="ocean-canvas"></canvas>
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🛰️ AI-Powered Environmental Intelligence</div>
+    <h1 class="hero-title">
+      <span class="line1">Protecting</span>
+      <span class="line2">Oceans</span>
+      <span class="line3">with <span class="glitch" data-text="Artificial Intelligence">Artificial Intelligence</span></span>
+    </h1>
+    <p class="hero-sub">Real-time ocean pollution monitoring powered by YOLOv8 AI detection, satellite imagery analysis, and predictive forecasting for marine ecosystem preservation.</p>
+    <div class="hero-cta">
+      <button class="btn-primary large" onclick="scrollTo('#dashboard')">
+        <span>⚡</span> Live Dashboard
+      </button>
+      <button class="btn-outline large" onclick="scrollTo('#ai-detect')">
+        <span>🤖</span> Try AI Detection
+      </button>
+      <button class="btn-ghost large" onclick="scrollTo('#report')">
+        <span>📍</span> Report Pollution
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="hnum" data-target="47291">0</span><span class="hlabel">Reports Filed</span></div>
+      <div class="hstat"><span class="hnum" data-target="189">0</span><span class="hlabel">Regions Monitored</span></div>
+      <div class="hstat"><span class="hnum" data-target="94.7" data-decimal="1">0</span><span class="hlabel">AI Accuracy %</span></div>
+      <div class="hstat"><span class="hnum" data-target="73">0</span><span class="hlabel">Ocean Health Index</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ Scroll to Explore</div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="features" id="features">
+  <div class="section-header">
+    <div class="section-tag">CAPABILITIES</div>
+    <h2>Intelligent Ocean <span class="accent">Protection Suite</span></h2>
+    <p>Military-grade AI infrastructure meets environmental science</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card" style="--delay:0s">
+      <div class="feat-icon">🤖</div>
+      <h3>AI Pollution Detection</h3>
+      <p>YOLOv8-powered real-time detection of plastic waste, oil spills, fishing nets, chemical runoff, and sewage across satellite and drone imagery.</p>
+      <div class="feat-tag">YOLOv8 + OpenCV</div>
+    </div>
+    <div class="feat-card" style="--delay:0.1s">
+      <div class="feat-icon">🌡️</div>
+      <h3>Ocean Health Monitoring</h3>
+      <p>Continuous water quality index tracking across 189 regions with pH, temperature, turbidity, and dissolved oxygen sensors feeding live AI models.</p>
+      <div class="feat-tag">IoT + ML Pipeline</div>
+    </div>
+    <div class="feat-card" style="--delay:0.2s">
+      <div class="feat-icon">🦈</div>
+      <h3>Biodiversity Risk Tracking</h3>
+      <p>Species survival probability models analyzing habitat destruction, pollution correlation, and migration disruption for 4,200+ marine species.</p>
+      <div class="feat-tag">TensorFlow Models</div>
+    </div>
+    <div class="feat-card" style="--delay:0.3s">
+      <div class="feat-icon">🗺️</div>
+      <h3>Heatmap Analytics</h3>
+      <p>Interactive geospatial pollution heatmaps with critical zone classification, temporal analysis, and exportable intelligence reports.</p>
+      <div class="feat-tag">Leaflet.js + WebGL</div>
+    </div>
+    <div class="feat-card" style="--delay:0.4s">
+      <div class="feat-icon">🔮</div>
+      <h3>Forecasting System</h3>
+      <p>72-hour pollution spread prediction, coral reef bleaching alerts, and 30-day ecosystem damage forecasts using time-series deep learning.</p>
+      <div class="feat-tag">LSTM + Transformer</div>
+    </div>
+    <div class="feat-card" style="--delay:0.5s">
+      <div class="feat-icon">📱</div>
+      <h3>Citizen Reporting</h3>
+      <p>Community-powered pollution reporting with GPS tagging, AI-assisted classification, and direct routing to government cleanup teams.</p>
+      <div class="feat-tag">React Native App</div>
+    </div>
+    <div class="feat-card" style="--delay:0.6s">
+      <div class="feat-icon">♻️</div>
+      <h3>Cleanup Prioritization</h3>
+      <p>Resource-optimized cleanup operation routing using environmental impact scores, accessibility analysis, and crew deployment algorithms.</p>
+      <div class="feat-tag">Operations Research</div>
+    </div>
+    <div class="feat-card" style="--delay:0.7s">
+      <div class="feat-icon">🪸</div>
+      <h3>Coral Reef Survival AI</h3>
+      <p>Bleaching prediction models, thermal stress forecasting, and recovery timeline estimation for the world's most critical reef ecosystems.</p>
+      <div class="feat-tag">CNN + Satellite</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI WORKFLOW -->
+<section class="workflow">
+  <div class="section-header">
+    <div class="section-tag">HOW IT WORKS</div>
+    <h2>AI <span class="accent">Intelligence Pipeline</span></h2>
+  </div>
+  <div class="workflow-steps">
+    <div class="wstep">
+      <div class="wicon">📸</div>
+      <div class="wnum">01</div>
+      <h4>Citizen Upload</h4>
+      <p>Image, GPS, description submitted via app or web portal</p>
+    </div>
+    <div class="wline"><div class="wflow"></div></div>
+    <div class="wstep">
+      <div class="wicon">🤖</div>
+      <div class="wnum">02</div>
+      <h4>AI Detection</h4>
+      <p>YOLOv8 classifies waste type, quantity, and concentration</p>
+    </div>
+    <div class="wline"><div class="wflow"></div></div>
+    <div class="wstep">
+      <div class="wicon">⚠️</div>
+      <div class="wnum">03</div>
+      <h4>Risk Analysis</h4>
+      <p>Environmental impact score, species threat assessment</p>
+    </div>
+    <div class="wline"><div class="wflow"></div></div>
+    <div class="wstep">
+      <div class="wicon">🔮</div>
+      <div class="wnum">04</div>
+      <h4>Forecasting</h4>
+      <p>72-hour spread prediction, ocean current modeling</p>
+    </div>
+    <div class="wline"><div class="wflow"></div></div>
+    <div class="wstep">
+      <div class="wicon">🚢</div>
+      <div class="wnum">05</div>
+      <h4>Cleanup Action</h4>
+      <p>Optimal crew deployment, equipment recommendations</p>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN DASHBOARD -->
+<section class="dashboard-section" id="dashboard">
+  <div class="section-header">
+    <div class="section-tag">LIVE DASHBOARD</div>
+    <h2>Ocean Intelligence <span class="accent">Command Center</span></h2>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-cards">
+    <div class="stat-card critical">
+      <div class="stat-icon">🌊</div>
+      <div class="stat-info">
+        <div class="stat-label">Pollution Index</div>
+        <div class="stat-value" data-target="67.4" data-decimal="1">0</div>
+        <div class="stat-change red">↑ +2.3 this week</div>
+      </div>
+      <div class="stat-ring" style="--pct:67"></div>
+    </div>
+    <div class="stat-card good">
+      <div class="stat-icon">💙</div>
+      <div class="stat-info">
+        <div class="stat-label">Ocean Health Score</div>
+        <div class="stat-value" data-target="73.2" data-decimal="1">0</div>
+        <div class="stat-change green">↓ -0.8 vs last month</div>
+      </div>
+      <div class="stat-ring" style="--pct:73"></div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-icon">📋</div>
+      <div class="stat-info">
+        <div class="stat-label">Active Reports</div>
+        <div class="stat-value" data-target="1247">0</div>
+        <div class="stat-change yellow">↑ +89 today</div>
+      </div>
+      <div class="stat-ring" style="--pct:45"></div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-icon">🚨</div>
+      <div class="stat-info">
+        <div class="stat-label">High Risk Zones</div>
+        <div class="stat-value" data-target="23">0</div>
+        <div class="stat-change red">↑ +3 new zones</div>
+      </div>
+      <div class="stat-ring" style="--pct:23"></div>
+    </div>
+    <div class="stat-card ops">
+      <div class="stat-icon">⚓</div>
+      <div class="stat-info">
+        <div class="stat-label">Cleanup Operations</div>
+        <div class="stat-value" data-target="8">0</div>
+        <div class="stat-change green">Active now</div>
+      </div>
+      <div class="stat-ring" style="--pct:80"></div>
+    </div>
+    <div class="stat-card bio">
+      <div class="stat-icon">🐋</div>
+      <div class="stat-info">
+        <div class="stat-label">Biodiversity Risk</div>
+        <div class="stat-value" data-target="41.6" data-decimal="1">0</div>
+        <div class="stat-change yellow">Moderate threat</div>
+      </div>
+      <div class="stat-ring" style="--pct:42"></div>
+    </div>
+  </div>
+
+  <!-- MAP + CHARTS -->
+  <div class="dash-grid">
+    <!-- OCEAN MAP -->
+    <div class="map-panel glass-card">
+      <div class="panel-header">
+        <h3>🗺️ Live Pollution Map</h3>
+        <div class="map-filters">
+          <button class="filter-btn active" onclick="filterMap('all')">All</button>
+          <button class="filter-btn" onclick="filterMap('critical')">🔴 Critical</button>
+          <button class="filter-btn" onclick="filterMap('medium')">🟠 Medium</button>
+          <button class="filter-btn" onclick="filterMap('safe')">🟢 Safe</button>
+        </div>
+      </div>
+      <div id="ocean-map" class="ocean-map"></div>
+      <div class="map-legend">
+        <span><span class="dot red"></span> Critical</span>
+        <span><span class="dot orange"></span> Medium</span>
+        <span><span class="dot green"></span> Safe</span>
+        <span><span class="dot cyan"></span> Cleanup Active</span>
+      </div>
+    </div>
+
+    <!-- CHARTS COLUMN -->
+    <div class="charts-col">
+      <div class="chart-panel glass-card">
+        <div class="panel-header"><h3>📈 Pollution Trend</h3><span class="live-tag">LIVE</span></div>
+        <canvas id="trend-chart" height="160"></canvas>
+      </div>
+      <div class="chart-panel glass-card">
+        <div class="panel-header"><h3>🧬 Waste Composition</h3></div>
+        <canvas id="donut-chart" height="160"></canvas>
+        <div class="donut-legend">
+          <span><span class="dot cyan"></span> Plastic 45%</span>
+          <span><span class="dot orange"></span> Oil Spill 22%</span>
+          <span><span class="dot yellow"></span> Nets 18%</span>
+          <span><span class="dot red"></span> Chemical 15%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI DETECTION PANEL -->
+<section class="ai-section" id="ai-detect">
+  <div class="section-header">
+    <div class="section-tag">AI ENGINE</div>
+    <h2>Real-time <span class="accent">Pollution Detection</span></h2>
+    <p>Upload any ocean/beach image and our YOLOv8 model will analyze it instantly</p>
+  </div>
+  <div class="ai-panel">
+    <!-- UPLOADER -->
+    <div class="upload-zone glass-card" id="upload-zone">
+      <div class="upload-inner" id="upload-inner">
+        <div class="upload-icon">🌊</div>
+        <h3>Drop Ocean Image Here</h3>
+        <p>Drag & drop or click to upload</p>
+        <p class="upload-hint">Supports JPG, PNG, WebP — Max 10MB</p>
+        <button class="btn-primary" onclick="document.getElementById('file-input').click()">Select Image</button>
+        <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleUpload(event)">
+      </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="detect-results glass-card" id="detect-results" style="display:none">
+      <div class="result-image-wrap">
+        <img id="preview-img" src="" alt="Uploaded">
+        <div class="scan-line" id="scan-line"></div>
+        <div id="bbox-overlay"></div>
+      </div>
+      <div class="detect-data">
+        <div class="detect-header">
+          <h3>🤖 AI Analysis Complete</h3>
+          <div class="conf-badge">94.7% Confidence</div>
+        </div>
+        <div class="detections" id="detections-list"></div>
+        <div class="risk-meter">
+          <div class="risk-label">Environmental Risk Level</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar" id="risk-bar" style="width:0%"></div>
+          </div>
+          <div class="risk-value" id="risk-value">Analyzing...</div>
+        </div>
+        <div class="action-box" id="action-box"></div>
+        <button class="btn-outline" onclick="resetDetector()">↺ Analyze Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMO SAMPLES -->
+  <div class="demo-samples">
+    <p>Try sample images:</p>
+    <button class="sample-btn" onclick="loadSample('plastic')">🗑️ Plastic Waste Beach</button>
+    <button class="sample-btn" onclick="loadSample('oil')">🛢️ Oil Spill</button>
+    <button class="sample-btn" onclick="loadSample('nets')">🎣 Abandoned Fishing Nets</button>
+  </div>
+</section>
+
+<!-- FORECASTING PANEL -->
+<section class="forecast-section" id="forecast">
+  <div class="section-header">
+    <div class="section-tag">PREDICTIVE AI</div>
+    <h2>Ocean <span class="accent">Forecasting System</span></h2>
+    <p>72-hour pollution spread prediction & ecosystem damage modeling</p>
+  </div>
+  <div class="forecast-grid">
+    <div class="forecast-card glass-card" style="--glow:#00d4ff">
+      <div class="fc-top">
+        <span class="fc-icon">🌊</span>
+        <span class="fc-period">Next 72h</span>
+      </div>
+      <h4>Pollution Spread</h4>
+      <div class="fc-value">+18.3 km²</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:72%;--color:#00d4ff"></div></div>
+      <p class="fc-desc">South Pacific gyre will carry plastic patches northeast — high confidence</p>
+      <div class="fc-status warn">⚠️ Alert Issued</div>
+    </div>
+    <div class="forecast-card glass-card" style="--glow:#ff6b35">
+      <div class="fc-top">
+        <span class="fc-icon">🪸</span>
+        <span class="fc-period">30-Day</span>
+      </div>
+      <h4>Coral Reef Survival</h4>
+      <div class="fc-value">61.2%</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:61%;--color:#ff6b35"></div></div>
+      <p class="fc-desc">Thermal stress index critical — Great Barrier Reef sector 7-B at risk</p>
+      <div class="fc-status danger">🔴 Critical Alert</div>
+    </div>
+    <div class="forecast-card glass-card" style="--glow:#00ff9d">
+      <div class="fc-top">
+        <span class="fc-icon">💧</span>
+        <span class="fc-period">7-Day</span>
+      </div>
+      <h4>Water Quality Index</h4>
+      <div class="fc-value">68.5 / 100</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:68%;--color:#00ff9d"></div></div>
+      <p class="fc-desc">pH balance improving in North Atlantic — cleanup operations effective</p>
+      <div class="fc-status ok">✅ Improving</div>
+    </div>
+    <div class="forecast-card glass-card" style="--glow:#ff0080">
+      <div class="fc-top">
+        <span class="fc-icon">🐟</span>
+        <span class="fc-period">6-Month</span>
+      </div>
+      <h4>Marine Biodiversity Risk</h4>
+      <div class="fc-value">HIGH</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:79%;--color:#ff0080"></div></div>
+      <p class="fc-desc">23 species facing critical habitat loss — migration corridors blocked</p>
+      <div class="fc-status danger">🔴 Endangered</div>
+    </div>
+    <div class="forecast-card glass-card" style="--glow:#ffd700">
+      <div class="fc-top">
+        <span class="fc-icon">♻️</span>
+        <span class="fc-period">Priority</span>
+      </div>
+      <h4>Cleanup Priority Zone</h4>
+      <div class="fc-value">Zone 7-B</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:90%;--color:#ffd700"></div></div>
+      <p class="fc-desc">Pacific plastic accumulation zone — 4 vessels recommended deployment</p>
+      <div class="fc-status warn">⚠️ Deploy Now</div>
+    </div>
+    <div class="forecast-card glass-card" style="--glow:#9b59b6">
+      <div class="fc-top">
+        <span class="fc-icon">🌡️</span>
+        <span class="fc-period">Annual</span>
+      </div>
+      <h4>Ecosystem Damage Score</h4>
+      <div class="fc-value">+14.7%</div>
+      <div class="fc-bar"><div class="fc-fill" style="width:55%;--color:#9b59b6"></div></div>
+      <p class="fc-desc">Projected annual increase if current pollution trends continue unchecked</p>
+      <div class="fc-status warn">⚠️ Intervention Needed</div>
+    </div>
+  </div>
+</section>
+
+<!-- CITIZEN REPORTING -->
+<section class="report-section" id="report">
+  <div class="section-header">
+    <div class="section-tag">COMMUNITY INTEL</div>
+    <h2>Citizen <span class="accent">Reporting Portal</span></h2>
+    <p>Your eyes on the ground power our AI — every report helps save marine life</p>
+  </div>
+  <div class="report-layout">
+    <!-- FORM -->
+    <div class="report-form glass-card">
+      <h3>📍 Submit Pollution Report</h3>
+      <div class="form-group">
+        <label>Pollution Type</label>
+        <select class="form-input" id="pol-type">
+          <option>🗑️ Plastic Waste</option>
+          <option>🛢️ Oil Spill</option>
+          <option>🎣 Abandoned Fishing Gear</option>
+          <option>☣️ Chemical Discharge</option>
+          <option>💧 Sewage Runoff</option>
+          <option>🐟 Dead Marine Life</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Latitude</label>
+          <input class="form-input" id="lat-input" type="text" placeholder="e.g. -33.8688" value="">
+        </div>
+        <div class="form-group">
+          <label>Longitude</label>
+          <input class="form-input" id="lng-input" type="text" placeholder="e.g. 151.2093" value="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Location Name</label>
+        <input class="form-input" type="text" placeholder="e.g. Bondi Beach, Sydney">
+      </div>
+      <div class="form-group">
+        <label>Severity</label>
+        <div class="severity-btns">
+          <button class="sev-btn" onclick="setSeverity(this,'Low')">🟢 Low</button>
+          <button class="sev-btn active" onclick="setSeverity(this,'Medium')">🟡 Medium</button>
+          <button class="sev-btn" onclick="setSeverity(this,'High')">🟠 High</button>
+          <button class="sev-btn" onclick="setSeverity(this,'Critical')">🔴 Critical</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-input" rows="3" placeholder="Describe what you observed..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Photo Evidence</label>
+        <div class="photo-upload" onclick="document.getElementById('report-img').click()">
+          📷 Click to upload photo
+          <input type="file" id="report-img" accept="image/*" style="display:none">
+        </div>
+      </div>
+      <button class="btn-primary full-width" onclick="submitReport()">📡 Submit Report</button>
+    </div>
+
+    <!-- REPORTS TRACKER -->
+    <div class="reports-tracker">
+      <h3>📊 Recent Reports</h3>
+      <div class="reports-list" id="reports-list">
+        <!-- populated by JS -->
+      </div>
+      <div class="contrib-score glass-card">
+        <div class="contrib-icon">⭐</div>
+        <div class="contrib-info">
+          <div class="contrib-label">Your Contribution Score</div>
+          <div class="contrib-val">847 pts</div>
+          <div class="contrib-rank">🏆 Ocean Guardian — Rank #234</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS PANEL -->
+<section class="notif-section">
+  <div class="section-header">
+    <div class="section-tag">LIVE ALERTS</div>
+    <h2>Real-time <span class="accent">Intelligence Feed</span></h2>
+  </div>
+  <div class="alerts-feed" id="alerts-feed">
+    <!-- populated by JS -->
+  </div>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal" style="display:none">
+  <div class="modal glass-card">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-tabs">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <div id="login-form">
+      <h3>Welcome Back</h3>
+      <div class="form-group"><label>Email</label><input class="form-input" type="email" placeholder="agent@marineguard.ai"></div>
+      <div class="form-group"><label>Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+      <div class="form-group">
+        <label>Role</label>
+        <select class="form-input">
+          <option>🌊 Citizen Researcher</option>
+          <option>🏛️ Government Agency</option>
+          <option>🔬 Marine Scientist</option>
+          <option>🛡️ Admin</option>
+        </select>
+      </div>
+      <button class="btn-primary full-width" onclick="login()">Login →</button>
+    </div>
+
+    <div id="signup-form" style="display:none">
+      <h3>Join Marine Guard AI</h3>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input class="form-input" placeholder="Jane"></div>
+        <div class="form-group"><label>Last Name</label><input class="form-input" placeholder="Ocean"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input class="form-input" type="email" placeholder="jane@example.com"></div>
+      <div class="form-group"><label>Organization</label><input class="form-input" placeholder="Marine Research Lab"></div>
+      <div class="form-group"><label>Password</label><input class="form-input" type="password" placeholder="Create strong password"></div>
+      <button class="btn-primary full-width" onclick="signup()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-brand" style="margin-bottom:1rem">
+        <span class="nav-logo">🌊</span>
+        <span class="nav-title">Marine Guard <span class="accent">AI</span></span>
+      </div>
+      <p>AI-powered ocean pollution monitoring and environmental protection. Built for governments, NGOs, scientists, and citizens who care about our oceans.</p>
+      <div class="social-links">
+        <a href="#">🐙 GitHub</a>
+        <a href="#">🐦 Twitter</a>
+        <a href="#">💼 LinkedIn</a>
+        <a href="#">📧 Email</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Platform</h5>
+      <ul>
+        <li><a href="#">Live Dashboard</a></li>
+        <li><a href="#">AI Detection</a></li>
+        <li><a href="#">Ocean Maps</a></li>
+        <li><a href="#">Forecasting</a></li>
+        <li><a href="#">API Access</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Organization</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Research Papers</a></li>
+        <li><a href="#">Partners</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press Kit</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Newsletter</h5>
+      <p>Weekly ocean intelligence reports to your inbox.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="your@email.com" class="form-input">
+        <button class="btn-primary" onclick="subscribe()">Subscribe</button>
+      </div>
+      <div class="footer-badges">
+        <span class="badge">🔒 SOC2 Compliant</span>
+        <span class="badge">🌍 GDPR Ready</span>
+        <span class="badge">⚡ 99.9% Uptime</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Marine Guard AI. All rights reserved. Built with 💙 for our oceans.</p>
+    <p>Powered by YOLOv8 · TensorFlow · FastAPI · React</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="app.js"></script>
+</body>
+</html>
